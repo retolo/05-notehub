@@ -41,6 +41,7 @@ export default function NoteForm({onClose}: CloseModal){
     ) =>{
         console.log(values);
         actions.resetForm();
+        onClose();
     }
     return(
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={Schema}>
@@ -79,7 +80,7 @@ export default function NoteForm({onClose}: CloseModal){
                     <button onClick={onClose}  type="button" className={css.cancelButton}>
                     Cancel
                     </button>
-                    <button
+                    <button 
                     type="submit"
                     className={css.submitButton}
                     disabled={false}

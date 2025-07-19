@@ -3,13 +3,13 @@ import NoteList from '../NoteList/NoteList'
 // import Pagination from '../Pagination/Pagination'
 import Modal from '../Modal/Modal'
 import SearchBox from '../SearchBox/SearchBox'
-import { useState } from 'react'
-
+import React, { useState } from 'react'
 
 
 export default function App(){
     
     const [isModalOpen, setIsModalOpen] = useState(false);
+    
 
     
 
