@@ -2,6 +2,8 @@ import css from './NoteForm.module.css'
 import { Formik, Form, Field, type FormikHelpers } from 'formik'
 import React, { useId } from 'react'
 import * as Yup from 'yup'
+import { createNote } from '../../services/noteService'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 interface FormValues{
     title: string
@@ -15,8 +17,9 @@ const initialValues: FormValues = {
     content: '',
     tag: 'Todo'
 }
-interface CloseModal{
+interface NoteFormProps{
     onClose: () => void
+    
 }
 const Schema = Yup.object().shape({
     title: Yup.string()
@@ -30,8 +33,18 @@ const Schema = Yup.object().shape({
 
 
 })
-export default function NoteForm({onClose}: CloseModal){
+export default function NoteForm({onClose}: NoteFormProps){
     const fieldId = useId();
+    const queryClient = useQueryClient()
+    const mutation = useMutation({
+        mutationFn: createNote,
+
+        onSuccess: () =>{
+            queryClient.invalidateQueries({queryKey: ['cardNotes']})
+        }
+    })
+
+
     
     
 
@@ -39,9 +52,14 @@ export default function NoteForm({onClose}: CloseModal){
         values: FormValues,
         actions: FormikHelpers<FormValues>
     ) =>{
-        console.log(values);
-        actions.resetForm();
-        onClose();
+        mutation.mutate(values, {
+            onSuccess: () =>{
+                actions.resetForm();
+                onClose();
+            }
+
+        })
+        
     }
     return(
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={Schema}>
@@ -80,7 +98,8 @@ export default function NoteForm({onClose}: CloseModal){
                     <button onClick={onClose}  type="button" className={css.cancelButton}>
                     Cancel
                     </button>
-                    <button 
+                    <button
+                     
                     type="submit"
                     className={css.submitButton}
                     disabled={false}

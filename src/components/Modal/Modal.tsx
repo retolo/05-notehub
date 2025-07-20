@@ -5,6 +5,7 @@ import NoteForm from '../NoteForm/NoteForm'
 interface ModalProps{
     onClose: () => void
     isOpen: boolean
+    
 }
 
 
@@ -22,7 +23,7 @@ export default function Modal({onClose, isOpen}: ModalProps){
             aria-modal="true"
             >
                 <div className={css.modal} >
-                    <NoteForm onClose={onClose}/>
+                    <NoteForm  onClose={onClose}/>
                 </div>
             </div>,
 

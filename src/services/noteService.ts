@@ -42,10 +42,32 @@ export const fetchNotesCard = async () => {
 
 }
 
-export function createNote(){
-    
+export const  createNote = async (newTask: object) => {
+    const mykey = import.meta.env.VITE_NOTEHUB_TOKEN;
+    const response = await axios.post(
+        `https://notehub-public.goit.study/api/notes/`, newTask,
+        {
+            headers:{
+                accept: 'application/json',
+                Authorization: `Bearer ${mykey}`
+            }
+        }
+
+    )
+    return response.data
 }
 
-export function deleteNote(){
+export const  deleteNote = async (note: Tasks) =>{
+    const mykey = import.meta.env.VITE_NOTEHUB_TOKEN;
+    const response = await axios.delete(
+        `https://notehub-public.goit.study/api/notes/${note.id}`,
+        {
+            headers:{
+                accept: 'application/json',
+                Authorization: `Bearer ${mykey}`
+            }
+        }
+    )
+    return response.data
     
 }
