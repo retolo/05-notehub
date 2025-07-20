@@ -5,6 +5,7 @@ import { type Tasks } from "../types/note";
 
 interface FetchNotesProps{
     notes: Tasks[]
+    totalPages: number
 }
 export const fetchNotes = async (searchText: string) => {
     const mykey = import.meta.env.VITE_NOTEHUB_TOKEN
@@ -26,11 +27,14 @@ export const fetchNotes = async (searchText: string) => {
 
 }
 
-export const fetchNotesCard = async () => {
+export const fetchNotesCard = async (pageQuery: number): Promise<FetchNotesProps> => {
     const mykey = import.meta.env.VITE_NOTEHUB_TOKEN
     const response = await axios.get<FetchNotesProps>(
         'https://notehub-public.goit.study/api/notes',
         {
+            params:{
+                page: pageQuery
+            },
             headers:{
                 accept: 'application/json',
                 Authorization: `Bearer ${mykey}`
@@ -38,7 +42,8 @@ export const fetchNotesCard = async () => {
         }
         
     );
-    return response.data.notes
+    
+    return response.data
 
 }
 

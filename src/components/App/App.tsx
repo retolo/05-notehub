@@ -1,6 +1,6 @@
 import css from './App.module.css'
 import NoteList from '../NoteList/NoteList'
-// import Pagination from '../Pagination/Pagination'
+
 import Modal from '../Modal/Modal'
 import SearchBox from '../SearchBox/SearchBox'
 import  { useState } from 'react'
@@ -12,6 +12,7 @@ export default function App(){
     
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    
 
     const {data} = useQuery({
         queryKey: ['notes', searchQuery],
@@ -19,13 +20,6 @@ export default function App(){
         placeholderData: keepPreviousData,
         enabled: searchQuery !== ''
     })
-    
-
-    
-
-    
-
-    
 
     const handleCloseModal = () =>{
         setIsModalOpen(false)
@@ -46,7 +40,7 @@ export default function App(){
             
             <Modal isOpen={isModalOpen} onClose={handleCloseModal}/>
             
-            {/* <Pagination/> */}
+            
         </div>
 
     )

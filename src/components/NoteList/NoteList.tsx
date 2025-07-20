@@ -2,8 +2,8 @@ import css from './NoteList.module.css'
 import { fetchNotesCard, deleteNote } from '../../services/noteService'
 import { useQuery, keepPreviousData } from '@tanstack/react-query'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-
-
+import Pagination from '../Pagination/Pagination'
+import { useState } from 'react'
 
 
 interface NoteProps{
@@ -18,13 +18,17 @@ interface Note{
     
 }
 export default function NoteList({notes}: Note){
+    const [currentPage, setCurrentPage] = useState(1);
     const {data} = useQuery({
-        queryKey:['cardNotes'],
-        queryFn: fetchNotesCard,
+        queryKey:['cardNotes', currentPage],
+        queryFn:() =>  fetchNotesCard(currentPage),
         placeholderData: keepPreviousData,
         enabled: !notes
         
     })
+     const totalPages = data?.totalPages ?? 0;
+
+    console.log(totalPages);
 
     const queryClient = useQueryClient()
     const mutation = useMutation({
@@ -40,9 +44,10 @@ export default function NoteList({notes}: Note){
         mutation.mutate(notes)
     }
 
-    const finalNotes = notes && notes.length > 0 ? notes : data ?? [];
+    const finalNotes = notes && notes.length > 0 ? notes : data?.notes ?? [];
 
     return (
+        <>
         <ul className={css.list}>
             
             {
@@ -59,7 +64,13 @@ export default function NoteList({notes}: Note){
 
             
         </ul>
+        {totalPages !== undefined && totalPages > 1 &&
+            <Pagination pageCount={totalPages} forcePage={currentPage} onPageChange={setCurrentPage}/>
 
+        }
+        
+        </>
+        
         
     )
 }
