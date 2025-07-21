@@ -1,34 +1,16 @@
 import css from './NoteList.module.css'
-import { fetchNotesCard, deleteNote } from '../../services/noteService'
-import { useQuery, keepPreviousData } from '@tanstack/react-query'
+import { deleteNote } from '../../services/noteService'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import Pagination from '../Pagination/Pagination'
-import { useState } from 'react'
-
-
-interface NoteProps{
-    id: number
-    tag: string
-    content: string
-    title: string
-}
-
-interface Note{
-    notes?: NoteProps[]
+import { type Note } from '../../types/note'
+interface NoteListProps{
+    notes?: Note[]
+    notesCard?: Note[]
     
 }
-export default function NoteList({notes}: Note){
-    const [currentPage, setCurrentPage] = useState(1);
-    const {data} = useQuery({
-        queryKey:['cardNotes', currentPage],
-        queryFn:() =>  fetchNotesCard(currentPage),
-        placeholderData: keepPreviousData,
-        enabled: !notes
-        
-    })
-     const totalPages = data?.totalPages ?? 0;
+type idNote = Note['id']
 
-    console.log(totalPages);
+export default function NoteList({notes, notesCard}: NoteListProps){
+    
 
     const queryClient = useQueryClient()
     const mutation = useMutation({
@@ -40,34 +22,31 @@ export default function NoteList({notes}: Note){
         
     })
 
-    const handleDeleteTask = (notes: NoteProps) =>{
-        mutation.mutate(notes)
+    const handleDeleteTask = (id: idNote) =>{
+        mutation.mutate(id)
     }
 
-    const finalNotes = notes && notes.length > 0 ? notes : data?.notes ?? [];
+    const finalNotes = notes && notes.length > 0 ? notes : notesCard;
 
     return (
         <>
         <ul className={css.list}>
-            
-            {
-                finalNotes.map((card) => (
+            {finalNotes !== undefined &&
+                finalNotes.map((card) =>(
                     <li className={css.listItem} key={`card-${card.id}`}>
-                        <h2 className={css.title}>{card.title}</h2>
-                        <p className={css.content}>{card.content}</p>
-                        <div className={css.footer}>
-                            <span className={css.tag}>{card.tag}</span>
-                            <button onClick={() => handleDeleteTask(card)} className={css.button}>Delete</button>
-                        </div>
-                    </li>
-                ))}
-
+                            <h2 className={css.title}>{card.title}</h2>
+                            <p className={css.content}>{card.content}</p>
+                            <div className={css.footer}>
+                                <span className={css.tag}>{card.tag}</span>
+                                <button onClick={() => handleDeleteTask(card.id)} className={css.button}>Delete</button>
+                            </div>
+                        </li>
+                ))
             
-        </ul>
-        {totalPages !== undefined && totalPages > 1 &&
-            <Pagination pageCount={totalPages} forcePage={currentPage} onPageChange={setCurrentPage}/>
+            }
 
-        }
+        </ul>
+        
         
         </>
         
