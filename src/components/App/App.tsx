@@ -26,7 +26,11 @@ export default function App(){
         
     })
 
-    
+    const handleResetPage = (newQuery: string) =>{
+        setSearchQuery(newQuery);
+        setCurrentPage(1);
+
+    }
 
    
     
@@ -40,7 +44,7 @@ export default function App(){
     return(
         <div className={css.app}>
             <header className={css.toolbar}>
-                <SearchBox  onChange={setSearchQuery}/>
+                <SearchBox onSubmit={handleResetPage} onChange={setSearchQuery}/>
                 <button type='button' onClick={() => setIsModalOpen(true)} className={css.button}>Create note +</button>
 
                 
