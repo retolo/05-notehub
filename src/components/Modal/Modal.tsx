@@ -1,19 +1,17 @@
 import { createPortal } from 'react-dom'
 import css from './Modal.module.css'
-import NoteForm from '../NoteForm/NoteForm'
 import type React from 'react'
 import { useEffect } from 'react'
-import { type ReactNode } from 'react'
 interface ModalProps{
     onClose: () => void
     isOpen: boolean  
+    children?: React.ReactNode;
+
 }
 
-type ModalChildrenProps = {
-    children: ReactNode;
-  };
 
-const BoxModal = ({children}: ModalChildrenProps) =>{
+
+const BoxModal = ({children}: {children?: React.ReactNode}) =>{
     return(
         <div className={css.modal} >
 
@@ -24,7 +22,7 @@ const BoxModal = ({children}: ModalChildrenProps) =>{
     
 }
 
-export default function Modal({onClose, isOpen}: ModalProps){
+export default function Modal({onClose, isOpen, children}: ModalProps){
 
     
 
@@ -67,9 +65,11 @@ export default function Modal({onClose, isOpen}: ModalProps){
             role="dialog"
             aria-modal="true"
             >
-                <BoxModal >
-                    <NoteForm  onClose={onClose}/>
+                <BoxModal>
+                    {children}
                 </BoxModal>
+                    
+                
             </div>,
 
     document.body

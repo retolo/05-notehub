@@ -27,8 +27,8 @@ export const fetchNotes = async ({searchText, pageQuery}: FetchNotesRequest): Pr
         'https://notehub-public.goit.study/api/notes',
         {
             params:{
-                search: searchText,
-                page: pageQuery
+                ...(searchText ? { search: searchText } : {}),
+                ...(pageQuery ? { page: pageQuery } : {}),
                 
             },
             headers:{
@@ -43,9 +43,9 @@ export const fetchNotes = async ({searchText, pageQuery}: FetchNotesRequest): Pr
 }
 
 
-export const  createNote = async (newTask: CreateNoteTask): Promise<FetchNotesProps> => {
+export const  createNote = async (newTask: CreateNoteTask): Promise<Note> => {
     const mykey = import.meta.env.VITE_NOTEHUB_TOKEN;
-    const response = await axios.post(
+    const response = await axios.post<Note>(
         `https://notehub-public.goit.study/api/notes/`, newTask,
         {
             headers:{
@@ -58,9 +58,9 @@ export const  createNote = async (newTask: CreateNoteTask): Promise<FetchNotesPr
     return response.data
 }
 
-export const  deleteNote = async (id: idNote): Promise<FetchNotesProps> =>{
+export const  deleteNote = async (id: idNote): Promise<Note> =>{
     const mykey = import.meta.env.VITE_NOTEHUB_TOKEN;
-    const response = await axios.delete(
+    const response = await axios.delete<Note>(
         `https://notehub-public.goit.study/api/notes/${id}`,
         {
             headers:{

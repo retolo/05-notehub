@@ -3,13 +3,13 @@ import { deleteNote } from '../../services/noteService'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { type Note } from '../../types/note'
 interface NoteListProps{
-    notes?: Note[]
-    notesCard?: Note[]
+    notes: Note[]
+    
     
 }
 type idNote = Note['id']
 
-export default function NoteList({notes, notesCard}: NoteListProps){
+export default function NoteList({notes}: NoteListProps){
     
 
     const queryClient = useQueryClient()
@@ -17,7 +17,7 @@ export default function NoteList({notes, notesCard}: NoteListProps){
         mutationFn: deleteNote,
         onSuccess: () =>{
             queryClient.invalidateQueries({queryKey: ['notes']})
-            queryClient.invalidateQueries({queryKey: ['cardNotes']})
+            
         }
         
     })
@@ -26,13 +26,13 @@ export default function NoteList({notes, notesCard}: NoteListProps){
         mutation.mutate(id)
     }
 
-    const finalNotes = notes && notes.length > 0 ? notes : notesCard;
+    
 
     return (
         <>
         <ul className={css.list}>
-            {finalNotes !== undefined &&
-                finalNotes.map((card) =>(
+            {notes !== undefined &&
+                notes.map((card) =>(
                     <li className={css.listItem} key={`card-${card.id}`}>
                             <h2 className={css.title}>{card.title}</h2>
                             <p className={css.content}>{card.content}</p>
