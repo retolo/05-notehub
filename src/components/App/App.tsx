@@ -1,9 +1,10 @@
 import css from './App.module.css'
 import NoteList from '../NoteList/NoteList'
 import { useDebounce } from 'use-debounce'
+// import { useDebouncedCallback } from 'use-debounce'
 import Modal from '../Modal/Modal'
 import SearchBox from '../SearchBox/SearchBox'
-import  { useState } from 'react'
+import  React, { useState, useEffect } from 'react'
 import { useQuery, keepPreviousData } from '@tanstack/react-query'
 import { fetchNotes} from '../../services/noteService'
 import Pagination from '../Pagination/Pagination'
@@ -13,7 +14,25 @@ export default function App(){
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [debouncedSearch] = useDebounce(searchQuery, 1000)
+    const [debouncedSearch] = useDebounce(
+        searchQuery,
+        1000,
+    )
+
+    
+
+    useEffect(() =>{
+        if(debouncedSearch.trim() === ''){
+            setCurrentPage(1)
+            
+        }
+            
+    }, [debouncedSearch])
+
+
+    
+    
+        
     const {data} = useQuery({
         queryKey: ['notes', debouncedSearch, currentPage],
         queryFn: () => fetchNotes({
@@ -21,16 +40,15 @@ export default function App(){
             pageQuery: currentPage
         }),
         placeholderData: keepPreviousData,
+        // enabled: !isJustCleared
         
         
         
     })
 
-    const handleResetPage = (newQuery: string) =>{
-        setSearchQuery(newQuery);
-        setCurrentPage(1);
+    
 
-    }
+    
 
    
     
@@ -44,12 +62,12 @@ export default function App(){
     return(
         <div className={css.app}>
             <header className={css.toolbar}>
-                <SearchBox onSubmit={handleResetPage} onChange={setSearchQuery}/>
+                <SearchBox  onChange={setSearchQuery}/>
                 <button type='button' onClick={() => setIsModalOpen(true)} className={css.button}>Create note +</button>
 
                 
             </header>
-            {data?.notes &&
+            {data?.notes && data?.notes.length > 1 &&
                 <NoteList notes={data?.notes}/>
             }
             {totalPages !== undefined && totalPages > 1 &&
