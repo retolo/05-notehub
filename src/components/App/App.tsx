@@ -40,10 +40,6 @@ export default function App(){
             pageQuery: currentPage
         }),
         placeholderData: keepPreviousData,
-        // enabled: !isJustCleared
-        
-        
-        
     })
 
     
