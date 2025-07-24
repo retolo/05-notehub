@@ -22,10 +22,10 @@ export default function App(){
     
 
     useEffect(() =>{
-        if(debouncedSearch.trim() === ''){
+        
             setCurrentPage(1)
             
-        }
+        
             
     }, [debouncedSearch])
 
@@ -63,7 +63,7 @@ export default function App(){
 
                 
             </header>
-            {data?.notes && data?.notes.length > 1 &&
+            {data?.notes && data?.notes.length > 0 &&
                 <NoteList notes={data?.notes}/>
             }
             {totalPages !== undefined && totalPages > 1 &&
